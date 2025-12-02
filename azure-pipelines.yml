@@ -65,12 +65,18 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          Write-Host "Copying WAR file to Tomcat webapps..."
+          Write-Host "Stopping Tomcat..."
+          & "C:\tomcat\bin\shutdown.bat"
+          Start-Sleep -Seconds 5
+          
+          Write-Host "Removing old deployment..."
+          Remove-Item "C:\tomcat\webapps\webapp" -Recurse -Force -ErrorAction SilentlyContinue
+          
+          Write-Host "Copying WAR file..."
           Copy-Item "$(Pipeline.Workspace)\drop\webapp\target\webapp.war" "C:\tomcat\webapps\webapp.war" -Force
           
           Write-Host "Restarting Tomcat..."
-          & "C:\tomcat\bin\shutdown.bat"
-          Start-Sleep -Seconds 5
           & "C:\tomcat\bin\startup.bat"
+          Start-Sleep -Seconds 10
           
           Write-Host "Deployment Completed Successfully!"
