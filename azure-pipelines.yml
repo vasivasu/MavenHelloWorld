@@ -1,32 +1,71 @@
-# Maven
-# Build your Java project and run tests with Apache Maven.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/java
-
 trigger:
 - master
 
-pool:
-  name: won_delete
+stages:
+# =======================
+# 🚀 STAGE 1: BUILD WAR
+# =======================
+- stage: Build
+  displayName: "QA_Stage"
+  jobs:
+  - job: BuildJob
+    displayName: "Build WAR and Publish Artifact"
+    pool:
+      name: 'won_delete'
+    steps:
+    - task: Maven@3
+      displayName: "Build with Maven"
+      inputs:
+        mavenPomFile: 'pom.xml'
+        mavenOptions: '-Xmx3072m'
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.11'
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: true
+        testResultsFiles: '**/surefire-reports/TEST-*.xml'
+        goals: 'package'
 
-steps:
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.11'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
-- task: CopyFiles@2
-  inputs:
-    SourceFolder: '$(Build.SourcesDirectory)'
-    Contents: '**/*.war'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+    - task: CopyFiles@2
+      displayName: "Copy WAR to Artifact Staging"
+      inputs:
+        SourceFolder: '$(Build.SourcesDirectory)'
+        Contents: '**/*.war'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+    - task: PublishBuildArtifacts@1
+      displayName: "Publish Artifact (drop)"
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'drop'
+        publishLocation: 'Container'
+
+
+# =======================
+# 🔥 STAGE 2: DEPLOY WAR
+# =======================
+- stage: Deploy
+  displayName: "Deploy to Tomcat"
+  dependsOn: Build
+  jobs:
+  - job: DeployJob
+    displayName: "Copy WAR and Restart Tomcat Service"
+    pool:
+      name: 'won_delete'
+    steps:
+    - task: DownloadBuildArtifacts@0
+      displayName: "Download Build Artifact"
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: 'drop'
+        downloadPath: '$(Pipeline.Workspace)'
+
+    - powershell: |
+        Write-Host "Copying WAR file to Tomcat webapps..."
+        Copy-Item "$(Pipeline.Workspace)\drop\webapp.war" "C:\tomcat\webapps\webapp.war" -Force
+        Write-Host "Restarting Tomcat..."
+        & "C:\tomcat\bin\shutdown.bat"
+        Start-Sleep -Seconds 5
+        & "C:\tomcat\bin\startup.bat"
+        Write-Host "Deployment Completed Successfully!"
+      displayName: "Deploy WAR to Tomcat"
