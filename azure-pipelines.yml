@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: won_delete
+  name: won_delete
 
 steps:
 - task: Maven@3
