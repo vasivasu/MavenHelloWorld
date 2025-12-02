@@ -60,12 +60,17 @@ stages:
         artifactName: 'drop'
         downloadPath: '$(Pipeline.Workspace)'
 
-    - powershell: |
-        Write-Host "Copying WAR file to Tomcat webapps..."
-        Copy-Item "$(Pipeline.Workspace)\drop\webapp.war" "C:\tomcat\webapps\webapp.war" -Force
-        Write-Host "Restarting Tomcat..."
-        & "C:\tomcat\bin\shutdown.bat"
-        Start-Sleep -Seconds 5
-        & "C:\tomcat\bin\startup.bat"
-        Write-Host "Deployment Completed Successfully!"
+    - task: PowerShell@2
       displayName: "Deploy WAR to Tomcat"
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "Copying WAR file to Tomcat webapps..."
+          Copy-Item "$(Pipeline.Workspace)\drop\webapp\target\webapp.war" "C:\tomcat\webapps\webapp.war" -Force
+          
+          Write-Host "Restarting Tomcat..."
+          & "C:\tomcat\bin\shutdown.bat"
+          Start-Sleep -Seconds 5
+          & "C:\tomcat\bin\startup.bat"
+          
+          Write-Host "Deployment Completed Successfully!"
