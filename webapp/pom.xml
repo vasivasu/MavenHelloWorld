@@ -17,6 +17,9 @@
 
   <build>
     <finalName>webapp</finalName>
+   <!-- Dynamic naming version:
+<finalName>${project.artifactId}</finalName>
+-->
     <plugins>
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
