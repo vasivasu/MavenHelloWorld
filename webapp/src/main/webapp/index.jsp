@@ -2,91 +2,124 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Welcome to Vasu’s Tomcat Server 🚀</title>
+<title>Vasu’s Tomcat Server</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
 <style>
     body {
         margin: 0;
-        font-family: 'Segoe UI', Arial, sans-serif;
-        background: linear-gradient(135deg, #1f1c2c, #928dab);
+        font-family: 'Poppins', sans-serif;
+        background: radial-gradient(circle at top, #2c2a4a, #1a182e);
         color: #fff;
-    }
-    header {
-        text-align: center;
-        padding: 60px 20px;
-    }
-    header h1 {
-        font-size: 3.5rem;
-        margin-bottom: 10px;
-        text-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    }
-    header p {
-        font-size: 1.2rem;
-        opacity: 0.9;
-    }
-    .card {
-        max-width: 800px;
-        margin: 50px auto;
-        background: rgba(255, 255, 255, 0.1);
-        padding: 30px;
-        border-radius: 20px;
-        backdrop-filter: blur(10px);
-        text-align: center;
-        box-shadow: 0 0 25px rgba(0,0,0,0.3);
-    }
-    .btn {
-        display: inline-block;
-        margin-top: 20px;
-        padding: 12px 25px;
-        border-radius: 50px;
-        background: #ffb300;
-        color: #000;
-        font-weight: bold;
-        text-decoration: none;
-        transition: 0.3s ease-in-out;
-    }
-    .btn:hover {
-        background: #ffcb42;
-        transform: translateY(-3px);
-    }
-    footer {
-        text-align: center;
-        padding: 20px;
-        font-size: 0.8rem;
-        opacity: 0.7;
+        overflow-x: hidden;
     }
 
+    .glow-title {
+        font-size: 4rem;
+        text-align: center;
+        margin-top: 40px;
+        font-weight: 800;
+        text-shadow: 0 0 20px rgba(255,255,255,0.6);
+        animation: glow 2s infinite alternate;
+    }
+    @keyframes glow {
+        from { text-shadow: 0 0 10px #a7a7ff, 0 0 20px #6464ff; }
+        to { text-shadow: 0 0 15px #fff, 0 0 40px #7878ff; }
+    }
+
+    .tomcat-logo {
+        display: block;
+        margin: 0 auto;
+        width: 150px;
+        animation: float 4s ease-in-out infinite;
+    }
     @keyframes float {
         0% { transform: translateY(0px); }
-        50% { transform: translateY(-10px); }
+        50% { transform: translateY(-12px); }
         100% { transform: translateY(0px); }
     }
-    .tomcat-logo {
-        width: 120px;
-        animation: float 3s infinite ease-in-out;
-        margin-bottom: 20px;
+
+    .tagline {
+        text-align: center;
+        opacity: 0.85;
+        margin-top: 8px;
+        font-size: 1.2rem;
+    }
+
+    .card {
+        max-width: 850px;
+        margin: 60px auto;
+        padding: 40px;
+        background: rgba(255, 255, 255, 0.07);
+        border-radius: 25px;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 0 35px rgba(0,0,0,0.4);
+        text-align: center;
+        animation: fadeUp 1.2s ease forwards;
+    }
+
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 14px 28px;
+        margin-top: 25px;
+        background: #f7cb2d;
+        color: #000;
+        font-weight: bold;
+        border-radius: 50px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: transform .3s ease, background .3s ease;
+    }
+    .btn:hover {
+        background: #ffe56d;
+        transform: translateY(-4px) scale(1.05);
+    }
+
+    footer {
+        text-align: center;
+        padding: 25px;
+        opacity: 0.7;
+        font-size: 0.9rem;
+    }
+
+    .stars {
+        pointer-events: none;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: url("https://i.ibb.co/F3dsmj4/stars.png");
+        opacity: 0.15;
+        animation: moveStars 50s linear infinite;
+    }
+    @keyframes moveStars {
+        from { transform: translateY(0); }
+        to { transform: translateY(1000px); }
     }
 </style>
 </head>
 
 <body>
+<div class="stars"></div>
 
-<header>
-    <img class="tomcat-logo" src="https://tomcat.apache.org/images/tomcat.png" alt="Tomcat Logo">
-    <h1>🔥 Welcome to Vasu’s Tomcat!</h1>
-    <p>Java Web Applications Served Fresh from the Server 🐱🚀</p>
-</header>
+<img class="tomcat-logo" src="https://tomcat.apache.org/images/tomcat.png" alt="Tomcat">
+<h1 class="glow-title">Welcome to Vasu’s Tomcat</h1>
+<p class="tagline">Java Web Applications Served the Smarter Way</p>
 
 <div class="card">
-    <h2>Deployment Success!</h2>
-    <p>Your Tomcat Server is up and running. You can now deploy your awesome apps here.</p>
+    <h2>Deployment Success 🎯</h2>
+    <p>Your server is running perfectly. Let’s build something amazing!</p>
     <a class="btn" href="http://localhost:8080/manager/html" target="_blank">Open Tomcat Manager</a>
 </div>
 
 <footer>
-    Powered by Apache Tomcat | Created with ❤️ by Vasu
+    🚀 Powered by Apache Tomcat | Designed with ❤️ by Vasu
 </footer>
 
 </body>
 </html>
+
