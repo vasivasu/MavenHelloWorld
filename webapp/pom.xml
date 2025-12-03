@@ -16,8 +16,7 @@
   <description>Webapp.</description>
 
   <build>
-    <finalName>${project.artifactId}</finalName>
-
+    <finalName>webapp</finalName>
     <plugins>
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
@@ -27,7 +26,6 @@
   </build>
 
   <dependencies>
-
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
