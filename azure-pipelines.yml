@@ -11,7 +11,7 @@ stages:
   - job: BuildJob
     displayName: "Build WAR and Publish Artifact"
     pool:
-      name: 'won_delete'
+      name: 'windows-latest'
     steps:
     - task: Maven@3
       displayName: "Build with Maven"
