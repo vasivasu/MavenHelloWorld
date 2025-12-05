@@ -2,6 +2,7 @@ trigger:
 - master
 
 stages:
+
 # =======================
 # 🚀 STAGE 1: BUILD WAR
 # =======================
@@ -11,7 +12,7 @@ stages:
   - job: BuildJob
     displayName: "Build WAR and Publish Artifact"
     pool:
-      vmimage: 'windows-latest'
+      vmImage: 'windows-latest'
     steps:
     - task: Maven@3
       displayName: "Build with Maven"
@@ -50,7 +51,7 @@ stages:
   - job: DeployJob
     displayName: "Copy WAR and Restart Tomcat Service"
     pool:
-      name: 'Default'   # self-hosted agent on your VM
+      name: 'Default'
     steps:
     - task: DownloadBuildArtifacts@0
       displayName: "Download Build Artifact"
@@ -61,17 +62,16 @@ stages:
         downloadPath: '$(Pipeline.Workspace)'
 
     - script: |
-    echo "Stopping Tomcat..."
-    sudo /opt/tomcat/bin/shutdown.sh || true
-    sleep 5
+        echo "Stopping Tomcat..."
+        sudo /opt/tomcat/bin/shutdown.sh || true
+        sleep 5
 
-    echo "Copying WAR file..."
-    sudo cp $(Pipeline.Workspace)/drop/webapp/target/webapp.war /opt/tomcat/webapps/webapp.war
+        echo "Copying WAR..."
+        sudo cp $(Pipeline.Workspace)/drop/webapp/target/webapp.war /opt/tomcat/webapps/webapp.war
 
-    echo "Starting Tomcat..."
-    sudo /opt/tomcat/bin/startup.sh
-    sleep 10
+        echo "Starting Tomcat..."
+        sudo /opt/tomcat/bin/startup.sh
+        sleep 10
 
-    echo "Deployment Completed Successfully!"
-  displayName: "Deploy WAR to Tomcat"
-
+        echo "Deployment Completed Successfully!"
+      displayName: "Deploy WAR to Tomcat"
