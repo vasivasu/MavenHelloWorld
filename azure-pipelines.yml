@@ -2,6 +2,10 @@ trigger:
   branches:
     include:
       - master
+  paths:
+    include:
+      - azure-pipelines.yml
+
 
 stages:
 
