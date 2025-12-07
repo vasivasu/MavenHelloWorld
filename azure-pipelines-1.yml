@@ -29,5 +29,4 @@ steps:
     containerRegistry: 'docker_hub'
     repository: 'delete_me'
     command: 'buildAndPush'
-    Dockerfile: '**/'
-    buildContext: '**AzureDockerfile'
+    Dockerfile: '**/AzureDockerfile'
