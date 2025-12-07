@@ -7,9 +7,10 @@ trigger:
   branches:
     include:
       - master
-    paths:
-      include:
-        - Dockerfile
+  paths:
+    include:
+      - Dockerfile
+      - azure-pipelines-1.yml
 
 pool:
   vmImage: 'ubuntu-latest'
