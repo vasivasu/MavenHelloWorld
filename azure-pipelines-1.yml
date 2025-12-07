@@ -4,29 +4,55 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
 
 trigger:
-- master
+  branches:
+    include:
+      - master
+    paths:
+      include:
+        - Dockerfile
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
-steps:
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.11'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
-- task: Docker@2
-  inputs:
-    containerRegistry: 'docker_hub'
-    command: 'login'
-- task: Docker@2
-  inputs:
-    containerRegistry: 'docker_hub'
-    repository: 'delete_me'
-    command: 'buildAndPush'
-    Dockerfile: '**/AzureDockerfile'
+stages:
+
+# 🐳 Stage 1 — Docker Build + Push
+- stage: Docker_Build_Push
+  jobs:
+  - job: BuildPush
+    steps:
+    - checkout: self
+
+    - task: Docker@2
+      displayName: "Login to Docker Hub"
+      inputs:
+        command: login
+        containerRegistry: 'docker_hub'
+
+    - task: Docker@2
+      displayName: "Build & Push Docker Image"
+      inputs:
+        command: buildAndPush
+        containerRegistry: 'docker_hub'
+        repository: 'delete_me'
+        Dockerfile: 'Dockerfile'
+        buildContext: '.'
+        tags: |
+          latest
+
+
+# # 🚀 Stage 2 — Deploy Container to VM
+# - stage: Deploy
+#   dependsOn: Docker_Build_Push
+#   jobs:
+#   - job: DeployToVM
+#     pool:
+#       name: 'Default' # self-hosted agent in your VM
+#     steps:
+#     - script: |
+#         sudo docker stop webapp || true
+#         sudo docker rm webapp || true
+#         sudo docker pull <username>/delete_me:latest
+#         sudo docker run -d --name webapp -p 8080:8080 <username>/delete_me:latest
+#       displayName: "Run Container on VM"
+
