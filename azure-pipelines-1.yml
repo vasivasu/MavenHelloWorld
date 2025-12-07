@@ -9,7 +9,8 @@ trigger:
       - master
   paths:
     include:
-      - Dockerfile
+      - azure-pipelines-1.yml
+
 
 stages:
 
