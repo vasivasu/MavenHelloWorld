@@ -44,6 +44,26 @@ stages:
 
 
 # =======================
+# 🧪 STAGE 2: TEST WAR
+# =======================
+- stage: Test
+  displayName: "UI Tests"
+  dependsOn: Build
+  jobs:
+  - job: TestJob
+    displayName: "Run Selenium Tests"
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - checkout: self
+
+    - task: Maven@3
+      displayName: "Run Selenium Tests"
+      inputs:
+        mavenPomFile: 'webapp/pom.xml'
+        goals: 'test'
+
+# =======================
 # 🔥 STAGE 2: DEPLOY WAR
 # =======================
 - stage: Deploy
