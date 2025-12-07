@@ -38,7 +38,7 @@ steps:
   inputs:
     command: buildAndPush
     containerRegistry: 'docker_hub'
-    repository: 'delete_me'
+    repository: 'vasivasu/delete_me'
     Dockerfile: 'Dockerfile'
     buildContext: '.'
     tags: |
