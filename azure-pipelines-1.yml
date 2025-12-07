@@ -7,36 +7,42 @@ trigger:
   branches:
     include:
       - master
-  paths:
-    include:
-      - azure-pipelines-1.yml
+    paths:
+      include:
+        - Dockerfile
 
+pool:
+  vmImage: 'ubuntu-latest'
 
-stages:
+steps:
+- checkout: self
 
-# 🐳 Stage 1 — Docker Build + Push
-- stage: Docker_Build_Push
-  jobs:
-  - job: BuildPush
-    steps:
-    - checkout: self
+# 1️⃣ Build WAR before Docker build
+- task: Maven@3
+  displayName: "Build WAR using Maven"
+  inputs:
+    mavenPomFile: "webapp/pom.xml"
+    goals: "package"
 
-    - task: Docker@2
-      displayName: "Login to Docker Hub"
-      inputs:
-        command: login
-        containerRegistry: 'docker_hub'
+# 2️⃣ Login to Docker Hub
+- task: Docker@2
+  displayName: "Login to Docker Hub"
+  inputs:
+    command: login
+    containerRegistry: 'docker_hub'
 
-    - task: Docker@2
-      displayName: "Build & Push Docker Image"
-      inputs:
-        command: buildAndPush
-        containerRegistry: 'docker_hub'
-        repository: 'delete_me'
-        Dockerfile: 'Dockerfile'
-        buildContext: '.'
-        tags: |
-          latest
+# 3️⃣ Build + Push Docker Image
+- task: Docker@2
+  displayName: "Build & Push Docker Image"
+  inputs:
+    command: buildAndPush
+    containerRegistry: 'docker_hub'
+    repository: 'delete_me'
+    Dockerfile: 'Dockerfile'
+    buildContext: '.'
+    tags: |
+      latest
+
 
 
 # # 🚀 Stage 2 — Deploy Container to VM
