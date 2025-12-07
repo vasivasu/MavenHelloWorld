@@ -55,17 +55,13 @@ stages:
     pool:
       vmImage: 'windows-latest'
     steps:
-    - checkout: self   # Checkout main repo (Build repo)
+    - checkout: self
 
-    # Checkout Test Repo
-    - checkout: git://vasivasu333/VASU_DEV/Automation_test_maven
-      displayName: "Checkout Test Automation Repo"
-      path: testrepo
-
-    - script: |
-        cd testrepo
-        mvn test
+    - task: Maven@3
       displayName: "Run Selenium Tests"
+      inputs:
+        mavenPomFile: 'webapp/pom.xml'
+        goals: 'test'
 
 # =======================
 # 🔥 STAGE 2: DEPLOY WAR
